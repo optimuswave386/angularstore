@@ -1,31 +1,39 @@
 <mat-drawer-container
-  [autosize]="true"
-  class="min-h-full max-w-7xl mx-auto border-x"
+    [autosize]="true"
+    class="min-h-full max-w-7xl mx-auto border-x"
 >
-  <mat-drawer mode="side" opened class="p-6">
-    <app-filters (showCategory)="onShowCategory($event)"></app-filters>
-  </mat-drawer>
-  <mat-drawer-content class="p-6">
-    <app-products-header
-      (columnsCountChange)="onColumnsCountChange($event)"
-      (itemsCountChange)="onItemsCountChange($event)"
-      (sortChange)="onSortChange($event)"
-    ></app-products-header>
-    <mat-grid-list
-      *ngIf="products && products.length"
-      gutterSize="16"
-      [cols]="cols"
-      [rowHeight]="rowHeight"
-    >
-      <mat-grid-tile *ngFor="let product of products">
-        <div
-          (addToCart)="onAddToCart($event)"
-          app-product-box
-          [product]="product"
-          [fullWidthMode]="cols === 1"
-          class="w-full"
-        ></div>
-      </mat-grid-tile>
-    </mat-grid-list>
-  </mat-drawer-content>
+    <mat-drawer class="p-6" mode="side" opened>
+        <!-- <div>Filters</div> -->
+        <app-filters (showCategory)="onShowCategory($event)"></app-filters>
+    </mat-drawer>
+    <mat-drawer-content class="p-6">
+        <p class="text-2xl font-bold mb-4">Products</p>
+        <app-products-header (columnsCountChange)="onColumnsCountChange($event)" class="font-bold">
+        </app-products-header>
+        {{ cols }}
+        {{ category }}
+        <mat-grid-list 
+            [cols]="cols" 
+            [rowHeight]="rowHeight" 
+            gutterSize="16px">
+            <mat-grid-tile>
+                <app-product-box 
+                (addToCart)="onAddToCart($event)"
+                class="w-full" 
+                [fullWidthMode]="cols === 1"></app-product-box>
+            </mat-grid-tile>
+            
+            @for(product of products; track product.id) {
+                <mat-grid-tile>
+                    <app-product-box 
+                    (addToCart)="onAddToCart($event)"
+                    class="w-full" 
+                    [fullWidthMode]="cols === 1" 
+                    [product]="product"></app-product-box>
+                </mat-grid-tile> 
+            }
+
+        </mat-grid-list>
+    </mat-drawer-content>
+
 </mat-drawer-container>

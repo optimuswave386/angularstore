@@ -1,10 +1,18 @@
-<mat-expansion-panel *ngIf="categories">
+@if(categories) {
+<mat-expansion-panel class="mb-4" [expanded]="false">
   <mat-expansion-panel-header>
-    <mat-panel-title> CATEGORIES </mat-panel-title>
+    <mat-panel-title>
+      Categories
+    </mat-panel-title>
   </mat-expansion-panel-header>
   <mat-selection-list [multiple]="false">
-    <mat-list-option *ngFor="let category of categories" [value]="category">
-      <button (click)="onShowCategory(category)">{{ category }}</button>
-    </mat-list-option>
+    @for (category of categories; track category) {
+        <mat-list-option [value]="category" (click)="onShowCategory(category)">
+            <button>{{ category }}</button>
+        </mat-list-option>
+    } @empty {
+        No items found.
+    }
   </mat-selection-list>
 </mat-expansion-panel>
+}
