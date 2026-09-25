@@ -8,7 +8,9 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-Here's a screenshot without the products from the API:
+Here're screenshots with/without the products from the API:
+<img width="1107" height="581" alt="Screenshot 2026-09-24 at 9 02 05 PM" src="https://github.com/user-attachments/assets/8d4edf5e-ab94-4071-a1d9-2e56216e686a" />
+
 <img width="1175" height="888" alt="Screenshot 2026-04-03 at 12 23 14 AM" src="https://github.com/user-attachments/assets/bc2a1643-e59c-4b5f-a433-f99dbe9867bf" />
 
 ## TODO
