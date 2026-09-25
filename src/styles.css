@@ -1,3 +1,64 @@
-/* You can add global styles to this file, and also import other style files */
-
 @import "tailwindcss";
+
+/* ---- Theme-aware helpers (Material system tokens) ---- */
+.text-muted { color: var(--mat-sys-on-surface-variant); }
+.border-subtle { border-color: var(--mat-sys-outline-variant); }
+.bg-surface-low { background-color: var(--mat-sys-surface-container-low); }
+.bg-surface-high { background-color: var(--mat-sys-surface-container-high); }
+.text-primary { color: var(--mat-sys-primary); }
+
+/* ---- Header ---- */
+.app-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  --mat-toolbar-container-background-color: color-mix(in srgb, var(--mat-sys-surface) 82%, transparent);
+  --mat-toolbar-container-text-color: var(--mat-sys-on-surface);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+}
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  background: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+}
+.brand-mark .mat-icon { font-size: 20px; width: 20px; height: 20px; }
+.active-link { background-color: var(--mat-sys-secondary-container); }
+
+/* ---- Landing page ---- */
+.hero-gradient {
+  background:
+    radial-gradient(55% 70% at 90% 0%, var(--mat-sys-tertiary-container), transparent 70%),
+    radial-gradient(65% 85% at 5% 0%, var(--mat-sys-primary-container), transparent 70%),
+    var(--mat-sys-surface);
+}
+.tile { border-radius: 28px; padding: 1.75rem; display: flex; flex-direction: column; justify-content: space-between; gap: 1.5rem; min-height: 160px; }
+.tile .mat-icon { font-size: 40px; width: 40px; height: 40px; }
+.tile-primary { background: var(--mat-sys-primary); color: var(--mat-sys-on-primary); }
+.tile-tertiary { background: var(--mat-sys-tertiary-container); color: var(--mat-sys-on-tertiary-container); }
+.tile-secondary { background: var(--mat-sys-secondary-container); color: var(--mat-sys-on-secondary-container); }
+.tile-surface { background: var(--mat-sys-surface-container-highest); color: var(--mat-sys-on-surface); }
+.icon-bubble {
+  display: grid; place-items: center; width: 52px; height: 52px; border-radius: 9999px;
+  background: var(--mat-sys-primary-container); color: var(--mat-sys-on-primary-container);
+}
+.cta-banner { background: var(--mat-sys-primary); color: var(--mat-sys-on-primary); border-radius: 32px; }
+.btn-lg {
+  --mat-button-filled-container-height: 52px;
+  --mat-button-outlined-container-height: 52px;
+  --mat-button-filled-horizontal-padding: 28px;
+  --mat-button-outlined-horizontal-padding: 28px;
+}
+.cta-banner .btn-inverse {
+  --mat-button-filled-container-color: var(--mat-sys-on-primary);
+  --mat-button-filled-label-text-color: var(--mat-sys-primary);
+}
+
+/* ---- Cards ---- */
+.card-hover { transition: box-shadow .2s ease, transform .2s ease; }
+.card-hover:hover { box-shadow: var(--mat-sys-level3); transform: translateY(-2px); }
+.img-well { background: #fff; }

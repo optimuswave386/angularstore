@@ -1,36 +1,37 @@
-<mat-card class="mb-4 px-4">
-    <div class="flex justify-between">
-        <div>
-            <button mat-button [matMenuTriggerFor]="sortByMenu">
-                Sort by {{ sort }}
-                <mat-icon>expand_more</mat-icon>
-            </button>
-            <mat-menu #sortByMenu="matMenu">
-                <button mat-menu-item (click)="onSortUpdated('asc')">Ascending</button>
-                <button mat-menu-item (click)="onSortUpdated('desc')">Descending</button>
-            </mat-menu>
-        </div>
-        <div class="flex items-center">            
-            <div>
-                <button mat-button [matMenuTriggerFor]="menu">
-                    Show {{ itemsShowCount }}
-                    <mat-icon>expand_more</mat-icon>
-                </button>
-                <mat-menu #menu="matMenu">
-                    <button mat-menu-item (click)="onItemsUpdated(12)">12 items</button>
-                    <button mat-menu-item (click)="onItemsUpdated(24)">24 items</button>
-                    <button mat-menu-item (click)="onItemsUpdated(36)">36 items</button>
-                </mat-menu>
-            </div>
-            <button (click)="onColumnsUpdated(1)">
-                <mat-icon>view_list</mat-icon>
-            </button>
-            <button (click)="onColumnsUpdated(3)">
-                <mat-icon>view_module</mat-icon>
-            </button>
-            <button (click)="onColumnsUpdated(4)">
-                <mat-icon>view_comfy</mat-icon>
-            </button>
-        </div>
-    </div>
-</mat-card>
+<div class="flex flex-wrap items-center justify-between gap-3 my-6">
+  <p class="text-muted text-sm">Showing {{ shown() }} of {{ total() }} products</p>
+
+  <div class="flex flex-wrap items-center gap-2">
+    <button mat-stroked-button [matMenuTriggerFor]="sortMenu">
+      <mat-icon>sort</mat-icon>
+      {{ sortLabel() }}
+      <mat-icon iconPositionEnd>arrow_drop_down</mat-icon>
+    </button>
+    <mat-menu #sortMenu="matMenu">
+      @for (o of sortOptions; track o.value) {
+        <button mat-menu-item (click)="sortChange.emit(o.value)">{{ o.label }}</button>
+      }
+    </mat-menu>
+
+    <button mat-stroked-button [matMenuTriggerFor]="countMenu">
+      Show {{ count() }}
+      <mat-icon iconPositionEnd>arrow_drop_down</mat-icon>
+    </button>
+    <mat-menu #countMenu="matMenu">
+      @for (n of countOptions; track n) {
+        <button mat-menu-item (click)="countChange.emit(n)">{{ n }} items</button>
+      }
+    </mat-menu>
+
+    <mat-button-toggle-group
+      hideSingleSelectionIndicator
+      aria-label="Layout"
+      [value]="cols()"
+      (change)="columnsCountChange.emit($event.value)"
+    >
+      <mat-button-toggle [value]="1" aria-label="List view"><mat-icon>view_list</mat-icon></mat-button-toggle>
+      <mat-button-toggle [value]="3" aria-label="Grid view"><mat-icon>view_module</mat-icon></mat-button-toggle>
+      <mat-button-toggle [value]="4" aria-label="Compact grid view"><mat-icon>view_comfy</mat-icon></mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+</div>

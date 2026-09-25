@@ -1,0 +1,90 @@
+<!-- Hero -->
+<section class="hero-gradient">
+  <div class="max-w-7xl mx-auto px-6 py-16 md:py-24 grid md:grid-cols-2 gap-12 items-center">
+    <div>
+      <p class="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-medium mb-6"
+         style="background: var(--mat-sys-secondary-container); color: var(--mat-sys-on-secondary-container)">
+        <mat-icon style="font-size: 18px; width: 18px; height: 18px">auto_awesome</mat-icon>
+        Welcome to Store
+      </p>
+      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight leading-[1.05]">
+        Find something you'll <span class="text-primary">love</span>.
+      </h1>
+      <p class="mt-6 text-lg text-muted max-w-xl">
+        Browse the catalogue, add your favourites to the cart and check out securely in just a few clicks.
+      </p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a mat-flat-button class="btn-lg" routerLink="/home">
+          <mat-icon>storefront</mat-icon> Shop now
+        </a>
+        <a mat-stroked-button class="btn-lg" routerLink="/cart">
+          <mat-icon>shopping_cart</mat-icon> View cart
+        </a>
+      </div>
+    </div>
+
+    <!-- Decorative tiles -->
+    <div class="flex flex-wrap gap-5" aria-hidden="true">
+      <div class="tile tile-primary flex-1 basis-[45%]"><mat-icon>devices</mat-icon><span class="text-xl font-medium">Electronics</span></div>
+      <div class="tile tile-tertiary flex-1 basis-[45%] translate-y-6"><mat-icon>checkroom</mat-icon><span class="text-xl font-medium">Clothing</span></div>
+      <div class="tile tile-secondary flex-1 basis-[45%]"><mat-icon>local_shipping</mat-icon><span class="text-xl font-medium">Free shipping</span></div>
+      <div class="tile tile-surface flex-1 basis-[45%] translate-y-6"><mat-icon>lock</mat-icon><span class="text-xl font-medium">Secure checkout</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- Quick links -->
+<section class="max-w-7xl mx-auto px-6 py-16">
+  <div class="flex items-end justify-between mb-8">
+    <div>
+      <h2 class="text-3xl font-semibold tracking-tight">Start browsing</h2>
+      <p class="text-muted mt-1">Jump straight to what you're after.</p>
+    </div>
+    <a mat-button routerLink="/home" class="hidden sm:inline-flex">
+      See everything <mat-icon iconPositionEnd>arrow_forward</mat-icon>
+    </a>
+  </div>
+
+  <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    @for (item of quickLinks; track item.name) {
+      <a [routerLink]="item.link" [queryParams]="item.query" class="block rounded-3xl focus-visible:outline-2 focus-visible:outline-offset-2">
+        <mat-card appearance="outlined" class="card-hover h-full p-6">
+          <div class="icon-bubble mb-5"><mat-icon>{{ item.icon }}</mat-icon></div>
+          <h3 class="text-lg font-medium">{{ item.name }}</h3>
+          <p class="text-muted text-sm mt-1">{{ item.description }}</p>
+          <span class="mt-5 inline-flex items-center gap-1 text-sm font-medium text-primary">
+            Go <mat-icon style="font-size: 18px; width: 18px; height: 18px">arrow_forward</mat-icon>
+          </span>
+        </mat-card>
+      </a>
+    }
+  </div>
+</section>
+
+<!-- Features -->
+<section class="bg-surface-low border-y border-subtle">
+  <div class="max-w-7xl mx-auto px-6 py-16 grid gap-10 md:grid-cols-3">
+    @for (f of features; track f.title) {
+      <div class="flex gap-4">
+        <div class="icon-bubble shrink-0"><mat-icon>{{ f.icon }}</mat-icon></div>
+        <div>
+          <h3 class="text-lg font-medium">{{ f.title }}</h3>
+          <p class="text-muted mt-1">{{ f.text }}</p>
+        </div>
+      </div>
+    }
+  </div>
+</section>
+
+<!-- Closing call to action -->
+<section class="max-w-7xl mx-auto px-6 py-16">
+  <div class="cta-banner px-8 py-12 md:px-14 md:py-16 flex flex-wrap items-center justify-between gap-6">
+    <div>
+      <h2 class="text-3xl font-semibold tracking-tight">Ready to find your next favourite?</h2>
+      <p class="mt-2 opacity-90">Head to the shop and see what's in stock.</p>
+    </div>
+    <a mat-flat-button class="btn-lg btn-inverse" routerLink="/home">
+      Browse products <mat-icon iconPositionEnd>arrow_forward</mat-icon>
+    </a>
+  </div>
+</section>

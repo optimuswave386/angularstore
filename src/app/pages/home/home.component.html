@@ -1,39 +1,48 @@
-<mat-drawer-container
-    [autosize]="true"
-    class="min-h-full max-w-7xl mx-auto border-x"
->
-    <mat-drawer class="p-6" mode="side" opened>
-        <!-- <div>Filters</div> -->
-        <app-filters (showCategory)="onShowCategory($event)"></app-filters>
-    </mat-drawer>
-    <mat-drawer-content class="p-6">
-        <p class="text-2xl font-bold mb-4">Products</p>
-        <app-products-header (columnsCountChange)="onColumnsCountChange($event)" class="font-bold">
-        </app-products-header>
-        {{ cols }}
-        {{ category }}
-        <mat-grid-list 
-            [cols]="cols" 
-            [rowHeight]="rowHeight" 
-            gutterSize="16px">
-            <mat-grid-tile>
-                <app-product-box 
-                (addToCart)="onAddToCart($event)"
-                class="w-full" 
-                [fullWidthMode]="cols === 1"></app-product-box>
-            </mat-grid-tile>
-            
-            @for(product of products; track product.id) {
-                <mat-grid-tile>
-                    <app-product-box 
-                    (addToCart)="onAddToCart($event)"
-                    class="w-full" 
-                    [fullWidthMode]="cols === 1" 
-                    [product]="product"></app-product-box>
-                </mat-grid-tile> 
-            }
+<div class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+  <div class="mb-6">
+    <h1 class="text-3xl sm:text-4xl font-semibold tracking-tight">Shop</h1>
+    <p class="text-muted mt-1">Browse everything we have in stock.</p>
+  </div>
 
-        </mat-grid-list>
-    </mat-drawer-content>
+  <app-filters [categories]="categories()" [selected]="category()" (showCategory)="onShowCategory($event)" />
 
-</mat-drawer-container>
+  <app-products-header
+    [total]="filtered().length"
+    [shown]="visible().length"
+    [cols]="cols()"
+    [sort]="sort()"
+    [count]="count()"
+    (columnsCountChange)="cols.set($event)"
+    (sortChange)="sort.set($event)"
+    (countChange)="count.set($event)"
+  />
+
+  @if (loading()) {
+    <mat-progress-bar mode="indeterminate" class="mb-4" />
+    <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" aria-hidden="true">
+      @for (i of [1, 2, 3, 4, 5, 6]; track i) {
+        <div class="h-80 rounded-3xl bg-surface-high animate-pulse"></div>
+      }
+    </div>
+  } @else if (failed()) {
+    <div class="text-center py-20">
+      <mat-icon class="text-muted" style="font-size: 56px; width: 56px; height: 56px">cloud_off</mat-icon>
+      <h2 class="text-xl font-medium mt-3">We couldn't load the products</h2>
+      <p class="text-muted mt-1">Please check your connection and try again.</p>
+      <button mat-flat-button class="mt-6" (click)="loadProducts()"><mat-icon>refresh</mat-icon> Try again</button>
+    </div>
+  } @else if (visible().length === 0) {
+    <div class="text-center py-20">
+      <mat-icon class="text-muted" style="font-size: 56px; width: 56px; height: 56px">search_off</mat-icon>
+      <h2 class="text-xl font-medium mt-3">No products found</h2>
+      <p class="text-muted mt-1">Nothing matches this category yet.</p>
+      <button mat-stroked-button class="mt-6" (click)="onShowCategory('')">Show all products</button>
+    </div>
+  } @else {
+    <div class="grid gap-4" [class]="gridClass()">
+      @for (product of visible(); track product.id) {
+        <app-product-box [product]="product" [fullWidthMode]="cols() === 1" (addToCart)="onAddToCart($event)" />
+      }
+    </div>
+  }
+</div>

@@ -1,82 +1,78 @@
-<mat-card class="max-w-7xl mx-auto">
-  <mat-card-header>
-    <mat-card-title>Shopping Cart</mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-1 w-full">
-      <ng-container matColumnDef="product">
-        <th mat-header-cell *matHeaderCellDef>Product</th>
-        <td mat-cell *matCellDef="let item">
-          <img alt="Product Image" [src]="item.product" width="50" height="50" />
-        </td>
-        <td mat-footer-cell *matFooterCellDef>
-          <button mat-raised-button color="warn" aria-label="Continue Shopping" class="float-left">
-            Continue Shopping
-          </button>
-        </td>
-      </ng-container>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+  <h1 class="text-3xl sm:text-4xl font-semibold tracking-tight mb-6">Shopping cart</h1>
 
-      <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef>Name</th>
-        <td mat-cell *matCellDef="let item">
-          <span>{{ item.name }}</span>
-        </td>
-        <td mat-footer-cell *matFooterCellDef></td>
-      </ng-container>
+  @if (cart().items.length === 0) {
+    <mat-card appearance="outlined" class="py-16 px-6 text-center">
+      <mat-icon class="mx-auto text-muted" style="font-size: 64px; width: 64px; height: 64px">shopping_cart</mat-icon>
+      <h2 class="text-xl font-medium mt-4">Your cart is empty</h2>
+      <p class="text-muted mt-1">Looks like you haven't added anything yet.</p>
+      <div class="mt-6">
+        <a mat-flat-button routerLink="/home"><mat-icon>storefront</mat-icon> Start shopping</a>
+      </div>
+    </mat-card>
+  } @else {
+    <div class="grid gap-6 lg:grid-cols-[1fr_22rem] items-start">
+      <!-- Items -->
+      <mat-card appearance="outlined">
+        <div class="flex items-center justify-between px-5 pt-4 pb-3">
+          <span class="font-medium">{{ itemCount() }} {{ itemCount() === 1 ? 'item' : 'items' }}</span>
+          <button mat-button (click)="clearCart()"><mat-icon>delete_sweep</mat-icon> Clear all</button>
+        </div>
+        <mat-divider />
 
-      <ng-container matColumnDef="price">
-        <th mat-header-cell *matHeaderCellDef>Price</th>
-        <td mat-cell *matCellDef="let item" >{{ item.price | currency }}</td>
-        <td mat-footer-cell *matFooterCellDef></td>
-      </ng-container>
+        @for (item of cart().items; track item.id) {
+          <div class="flex items-center gap-4 p-4 sm:p-5">
+            <img class="size-20 sm:size-24 shrink-0 rounded-2xl img-well object-contain p-2" [src]="item.product" [alt]="item.name" />
 
-      <ng-container matColumnDef="quantity">
-        <th mat-header-cell *matHeaderCellDef>Quantity</th>
-        <td mat-cell *matCellDef="let item">
-          <span class="flex justify-center items-center">
-          <button (click)="decreaseQuantity(item)" mat-icon-button color="primary" aria-label="Decrease quantity" (click)="item.quantity = item.quantity > 1 ? item.quantity - 1 : 1">
-            <mat-icon>remove</mat-icon>
-          </button>
-          <span>{{ item.quantity }}</span>
-          <button (click)="increaseQuantity(item)" mat-icon-button color="primary" aria-label="Increase quantity" >
-            <mat-icon>add</mat-icon>
-          </button>
-          </span>
-        </td>
-        <td mat-footer-cell *matFooterCellDef></td>
-      </ng-container>
+            <div class="flex-1 min-w-0">
+              <p class="font-medium line-clamp-2">{{ item.name }}</p>
+              <p class="text-muted text-sm mt-0.5">{{ item.price | currency }} each</p>
 
-      <ng-container matColumnDef="total">
-        <th mat-header-cell *matHeaderCellDef>Total</th>
-        <td mat-cell *matCellDef="let item">{{ (item.price * item.quantity) | currency }}</td>
-        <td mat-footer-cell *matFooterCellDef>{{ getTotalPrice() | currency }}</td>
-      </ng-container>
+              <div class="mt-3 inline-flex items-center rounded-full border border-subtle">
+                <button mat-icon-button (click)="decreaseQuantity(item)" aria-label="Decrease quantity">
+                  <mat-icon>remove</mat-icon>
+                </button>
+                <span class="min-w-8 text-center font-medium" aria-live="polite">{{ item.quantity }}</span>
+                <button mat-icon-button (click)="increaseQuantity(item)" aria-label="Increase quantity">
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+            </div>
 
-      <ng-container matColumnDef="action">
-        <th mat-header-cell *matHeaderCellDef>
-          <button mat-raised-button color="warn" aria-label="Remove all items" class="float-right">
-            Clear All
-          </button>
-        </th>
-        <td mat-cell *matCellDef="let item">
-          <!-- Example action button -->
-          <!-- In a real app, this would be a remove button -->
-          <button (click)="removeItem(item)" mat-icon-button color="warn" aria-label="Remove item" class="float-right">
-            <mat-icon>close</mat-icon>
-          </button>
-        </td>
-        <td mat-footer-cell *matFooterCellDef></td>
-      </ng-container>
+            <div class="flex flex-col items-end justify-between self-stretch">
+              <button mat-icon-button (click)="removeItem(item)" [attr.aria-label]="'Remove ' + item.name">
+                <mat-icon>close</mat-icon>
+              </button>
+              <span class="font-semibold text-lg">{{ item.price * item.quantity | currency }}</span>
+            </div>
+          </div>
+          @if (!$last) { <mat-divider /> }
+        }
+      </mat-card>
 
-      <!-- Header row -->
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <!-- Summary -->
+      <mat-card appearance="outlined" class="p-6 lg:sticky lg:top-24">
+        <h2 class="text-xl font-medium mb-4">Order summary</h2>
+        <div class="flex justify-between py-1">
+          <span class="text-muted">Subtotal</span>
+          <span>{{ total() | currency }}</span>
+        </div>
+        <div class="flex justify-between py-1">
+          <span class="text-muted">Shipping</span>
+          <span class="text-muted">Chosen at checkout</span>
+        </div>
+        <mat-divider class="my-3" />
+        <div class="flex justify-between items-baseline">
+          <span class="font-medium">Total</span>
+          <span class="text-2xl font-semibold">{{ total() | currency }}</span>
+        </div>
 
-      <!-- Data rows -->
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
-      <!-- Footer row for total price -->
-      <tr mat-footer-row *matFooterRowDef="displayedColumns" class="bg-gray-100 border-y"></tr>
-
-    </table>
-  </mat-card-content>
-</mat-card>
+        <button mat-flat-button class="btn-lg w-full mt-6" [disabled]="checkingOut()" (click)="onCheckout()">
+          <mat-icon>lock</mat-icon>
+          {{ checkingOut() ? 'Redirecting…' : 'Checkout' }}
+        </button>
+        <a mat-stroked-button class="w-full mt-3" routerLink="/home">Continue shopping</a>
+      </mat-card>
+    </div>
+  }
+</div>

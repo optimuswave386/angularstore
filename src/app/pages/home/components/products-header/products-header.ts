@@ -1,31 +1,33 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import { MatCardModule } from "@angular/material/card";
-import { MatAnchor } from "@angular/material/button";
-import { MatMenuModule } from "@angular/material/menu";
-import { MatIcon } from "@angular/material/icon";
+import { Component, computed, input, output } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatIconModule } from '@angular/material/icon';
+
+export type SortOption = 'default' | 'asc' | 'desc';
 
 @Component({
   selector: 'app-products-header',
-  imports: [MatCardModule, MatAnchor, MatMenuModule, MatIcon],
+  imports: [MatButtonModule, MatButtonToggleModule, MatMenuModule, MatIconModule],
   templateUrl: './products-header.component.html',
 })
 export class ProductsHeader {
+  total = input(0);
+  shown = input(0);
+  cols = input(3);
+  sort = input<SortOption>('default');
+  count = input(12);
 
-  @Output() columnsCountChange = new EventEmitter<number>();
-  
-  sort: string = 'desc';
-  itemsShowCount: number = 12;
+  columnsCountChange = output<number>();
+  sortChange = output<SortOption>();
+  countChange = output<number>();
 
-  onSortUpdated(newSort: string) : void {
-    this.sort = newSort;
-  }
+  sortOptions: { value: SortOption; label: string }[] = [
+    { value: 'default', label: 'Featured' },
+    { value: 'asc', label: 'Price: low to high' },
+    { value: 'desc', label: 'Price: high to low' },
+  ];
+  countOptions = [12, 24, 36];
 
-  onItemsUpdated(count: number) : void {
-    this.itemsShowCount = count;
-  }
-
-  onColumnsUpdated(colNum: number) : void {  
-    this.columnsCountChange.emit(colNum);
-  }
-
+  sortLabel = computed(() => this.sortOptions.find((o) => o.value === this.sort())?.label ?? 'Featured');
 }

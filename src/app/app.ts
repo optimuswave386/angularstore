@@ -1,61 +1,36 @@
-import { Component, signal, OnInit } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { Home } from "./pages/home/home"
-import { CommonModule } from '@angular/common';
-import { Header } from "./components/header/header"; 
-import { MatSidenavModule} from '@angular/material/sidenav'
-import { MatGridListModule} from '@angular/material/grid-list'
-import { MatMenuModule} from '@angular/material/menu'
-import { MatCardModule} from '@angular/material/card'
-import { MatIconModule} from '@angular/material/icon'
-import { MatExpansionModule} from '@angular/material/expansion'
-import { MatListModule} from '@angular/material/list'
-import { MatToolbarModule} from '@angular/material/toolbar'
-import { MatTableModule} from '@angular/material/table'
-import { MatBadgeModule} from '@angular/material/badge'
-import { MatSnackBarModule} from '@angular/material/snack-bar'
+import { Component, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { RouterLink, RouterOutlet } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
+import { Header } from './components/header/header';
 import { CartService } from './services/cart';
-import { Cart, CartItem } from './models/cart.model';
-import { StateStorageService } from './services/statestorage';
 import { StoreService } from './services/store';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { StateStorageService } from './services/statestorage';
 
 @Component({
   selector: 'app-root',
-  imports: [
-    RouterOutlet,
-    Header,
-    //Home,
-    CommonModule,
-    MatSidenavModule,
-    MatGridListModule,
-    MatMenuModule, 
-    MatCardModule,
-    MatIconModule,
-    MatExpansionModule,
-    MatListModule,
-    MatToolbarModule,
-    MatTableModule,
-    MatBadgeModule,
-    MatSnackBarModule,
-    HttpClientModule
-  ],
+  imports: [RouterOutlet, RouterLink, MatIconModule, Header],
   providers: [CartService, StoreService, StateStorageService],
   template: `
-  <app-header [cart]="cart"></app-header>
-  <!-- <app-home></app-home> -->
-  <router-outlet>
+    <div class="min-h-dvh flex flex-col">
+      <app-header [cart]="cart()" />
+      <main class="flex-1">
+        <router-outlet />
+      </main>
+      <footer class="border-t border-subtle bg-surface-low">
+        <div class="max-w-7xl mx-auto px-6 py-8 flex flex-wrap items-center justify-between gap-4 text-sm text-muted">
+          <a routerLink="/" class="flex items-center gap-2 font-medium" style="color: var(--mat-sys-on-surface)">
+            <mat-icon>storefront</mat-icon> Store
+          </a>
+          <span>© {{ year-1 }}-{{ year }}, Store. All rights reserved.</span>
+        </div>
+      </footer>
+    </div>
   `,
-  styles: [],
+  styles: [':host { display: block; }'],
 })
-export class App implements OnInit {
-  protected readonly title = signal('store');
-  cart: Cart = ({ items: [] });
-
-  constructor(private cartService: CartService) {}
-  ngOnInit() {
-      this.cartService.cart.subscribe(_cart => {
-        this.cart = _cart;
-      });
-  }
+export class App {
+  private cartService = inject(CartService);
+  cart = toSignal(this.cartService.cart, { requireSync: true });
+  year = new Date().getFullYear();
 }

@@ -1,61 +1,62 @@
-<div class="max-w-7xl mx-auto">
-<mat-toolbar class="flex justify-between">
-    <span>
-        <a routerLink="home">Store</a>
-    </span>
-    
-    <button mat-icon-button [matMenuTriggerFor]="menu">
-    <mat-icon 
-        [matBadge]="itemsQuantity"
-        [matBadgeHidden]="!itemsQuantity"
-        matBadgeColor="warn" 
+<mat-toolbar class="app-toolbar">
+  <div class="max-w-7xl mx-auto w-full flex items-center gap-1 sm:gap-2">
+    <a routerLink="/" class="flex items-center gap-2 mr-2 sm:mr-6" aria-label="Store home">
+      <span class="brand-mark"><mat-icon>storefront</mat-icon></span>
+      <span class="text-xl font-semibold tracking-tight">Store</span>
+    </a>
+
+    <nav class="flex items-center gap-1" aria-label="Main">
+      <a mat-button routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{ exact: true }">Home</a>
+      <a mat-button routerLink="/home" routerLinkActive="active-link">Shop</a>
+    </nav>
+
+    <span class="flex-1"></span>
+
+    <button mat-icon-button [matMenuTriggerFor]="cartMenu" aria-label="Open cart">
+      <mat-icon
+        [matBadge]="itemsQuantity()"
+        [matBadgeHidden]="!itemsQuantity()"
         aria-hidden="false"
-    >shopping_cart</mat-icon>
+      >shopping_cart</mat-icon>
     </button>
-    <mat-menu #menu="matMenu">
-        <div class="p-3 divide-y divide-solid">
-            <div class="pb-3 flex justify-between">
-                <span class="mr-16">{{ itemsQuantity }} items</span>
-                <a routerLink="cart">View Cart</a>
-            </div>
-
-            @if(cart.items.length === 0) {
-                <div class="py-3 text-center text-gray-500">
-                    Your cart is empty
-                </div>
-            }
-
-            @if(cart.items.length > 0) {
-            <div class="py-3">
-                @for(item of cart.items; track item.id){
-                <div class="flex justify-between font-light mb-2">
-                    {{ item.name }} x {{ item.quantity }}
-                    <span class="font-bold">{{ item.price | currency }}</span>
-                </div>
-                }
-                @empty {
-                    <span class="font-bold">No items in cart</span>
-                }
-            </div> 
-            }
-
-            <div class="flex justify-between py-3 font-light">
-                Total:
-                <span class="font-bold">{{ getTotal(cart.items) | currency }}</span>
-            </div>
-
-            <div class="pt-3 flex justify-between">
-                <button (click)="onClearCart()"
-                class="bg-rose-600 text-white rounded-full w-9 h-9">
-                    <mat-icon aria-hidden="false">remove_shopping_cart</mat-icon>
-                </button>
-                <button 
-                    routerLink="cart" 
-                    class="bg-green-600 text-white rounded-full w-9 h-9">
-                    <mat-icon aria-hidden="false">shopping_cart</mat-icon>
-                </button>
-            </div>
-        </div>
-    </mat-menu>
+  </div>
 </mat-toolbar>
-</div>
+
+<mat-menu #cartMenu="matMenu" xPosition="before">
+  <div class="w-80 max-w-[85vw]">
+    <div class="flex items-center justify-between px-4 pt-3 pb-2">
+      <span class="font-medium">Your cart</span>
+      <span class="text-muted text-sm">{{ itemsQuantity() }} {{ itemsQuantity() === 1 ? 'item' : 'items' }}</span>
+    </div>
+    <mat-divider />
+
+    @if (cart().items.length === 0) {
+      <div class="px-4 py-8 text-center text-muted">
+        <mat-icon style="font-size: 40px; width: 40px; height: 40px">shopping_bag</mat-icon>
+        <p class="mt-2">Your cart is empty</p>
+      </div>
+    } @else {
+      <ul class="max-h-72 overflow-auto m-0 p-0 list-none">
+        @for (item of cart().items; track item.id) {
+          <li class="flex items-center gap-3 px-4 py-2">
+            <img class="size-12 rounded-lg img-well object-contain p-1" [src]="item.product" alt="" />
+            <div class="flex-1 min-w-0">
+              <p class="truncate text-sm">{{ item.name }}</p>
+              <p class="text-xs text-muted">Qty {{ item.quantity }}</p>
+            </div>
+            <span class="text-sm font-medium">{{ item.price * item.quantity | currency }}</span>
+          </li>
+        }
+      </ul>
+      <mat-divider />
+      <div class="flex justify-between px-4 py-3">
+        <span class="text-muted">Total</span>
+        <span class="font-semibold">{{ total() | currency }}</span>
+      </div>
+      <div class="flex gap-2 px-4 pb-4">
+        <button mat-stroked-button (click)="onClearCart()">Clear</button>
+        <a mat-flat-button routerLink="/cart" class="flex-1">View cart</a>
+      </div>
+    }
+  </div>
+</mat-menu>

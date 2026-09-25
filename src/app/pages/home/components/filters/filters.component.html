@@ -1,18 +1,20 @@
-@if(categories) {
-<mat-expansion-panel class="mb-4" [expanded]="false">
-  <mat-expansion-panel-header>
-    <mat-panel-title>
-      Categories
-    </mat-panel-title>
-  </mat-expansion-panel-header>
-  <mat-selection-list [multiple]="false">
-    @for (category of categories; track category) {
-        <mat-list-option [value]="category" (click)="onShowCategory(category)">
-            <button>{{ category }}</button>
-        </mat-list-option>
-    } @empty {
-        No items found.
+@if (categories().length > 0) {
+  <div class="flex flex-wrap gap-2" role="group" aria-label="Filter by category">
+    <button
+      mat-flat-button
+      [attr.aria-pressed]="!selected()"
+      [style.--mat-button-filled-container-color]="selected() ? 'var(--mat-sys-surface-container-high)' : null"
+      [style.--mat-button-filled-label-text-color]="selected() ? 'var(--mat-sys-on-surface)' : null"
+      (click)="showCategory.emit('')"
+    >All</button>
+    @for (category of categories(); track category) {
+      <button
+        mat-flat-button
+        [attr.aria-pressed]="selected().toLowerCase() === category.toLowerCase()"
+        [style.--mat-button-filled-container-color]="selected().toLowerCase() === category.toLowerCase() ? null : 'var(--mat-sys-surface-container-high)'"
+        [style.--mat-button-filled-label-text-color]="selected().toLowerCase() === category.toLowerCase() ? null : 'var(--mat-sys-on-surface)'"
+        (click)="showCategory.emit(category)"
+      >{{ category | titlecase }}</button>
     }
-  </mat-selection-list>
-</mat-expansion-panel>
+  </div>
 }
